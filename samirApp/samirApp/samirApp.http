@@ -1,0 +1,6 @@
+@samirApp_HostAddress = http://localhost:5184
+
+GET {{samirApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

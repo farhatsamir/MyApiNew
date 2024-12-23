@@ -1,0 +1,94 @@
+﻿@page "/register"
+
+
+@using BlazorApp1.Identity
+@inject NavigationManager Navigation
+@inject IAccountManagement accountManagement
+
+<div class="col-12 col-md-5  col-lg-4">
+    <div class="card card-shadow border-0 rounded-3">
+        <div class="card-body p-4">
+            <div class="row g-6">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3 class="fw-bold fs-5 mb-2">Register</h3>
+                        <p class="text-muted">Create a new Account</p>
+                    </div>
+                </div>
+            </div>
+            <EditForm Model="model" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+                <div class="form-floating mb-4">
+                    <InputText @bind-Value="model!.Email"
+                               type="email"
+                               class="form-control rounded-2 border-0 bg-gray"
+                               id="email"
+                               placeholder="" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="() => model.Email" />
+                </div>
+
+                <div class="form-floating mb-4">
+                    <InputText @bind-Value="model!.Password"
+                               type="password"
+                               class="form-control rounded-2 border-0 bg-gray"
+                               id="password"
+                               placeholder="" />
+                    <label for="password">Password</label>
+                    <ValidationMessage For="() => model.Password" />
+                </div>
+
+                <div class="form-floating mb-4">
+                    <InputText @bind-Value="model!.ConfirmPassword"
+                               type="password"
+                               class="form-control rounded-2 border-0 bg-gray"
+                               id="confirmPassword"
+                               placeholder="" />
+                    <label for="confirmPassword">Confirm Password</label>
+                    <ValidationMessage For="() => model.ConfirmPassword" />
+                </div>
+
+                <div class="col-12 @(errorList.Any() ? string.Empty : "d-none")">
+                    <div class="alert alert-danger">
+                        @foreach (var error in errorList)
+                        {
+                            <span>@error</span>
+                        }
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg fs-6 fw-boledr py-3 w-100" disabled="@loading">Sign Up</button>
+
+            </EditForm>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            You have an account?
+            <NavLink href="/login" class="text-none">Sign in</NavLink>
+        </p>
+    </div>
+</div>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private RegisterModel? model { get; set; }
+    private string[] errorList = [];
+    private bool loading = false;
+    protected override void OnInitialized() => model ??= new();
+    private async Task Submit()
+    {
+        loading = true;
+        var result = await accountManagement.RegisterAsync(model!.Email,model!.Password);
+
+        if (result.Succeeded)
+        {
+            Navigation.NavigateTo("/login?IsNew=true");
+        }
+        else
+        {
+            errorList = result.ErrorList;
+        }
+        loading = false;
+    }
+}

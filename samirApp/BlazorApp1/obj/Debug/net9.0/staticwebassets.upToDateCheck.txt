@@ -1,0 +1,5 @@
+C:\Users\lenovo\Desktop\samirApp\samirApp\BlazorApp1\wwwroot\css\app.css
+C:\Users\lenovo\Desktop\samirApp\samirApp\BlazorApp1\wwwroot\index.html
+wwwroot\css\app.css
+wwwroot\icon-192.png
+wwwroot\index.html
